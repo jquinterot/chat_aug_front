@@ -36,7 +36,7 @@ const RegisterPage: React.FC = () => {
       <div className="absolute inset-0 bg-grid-pattern opacity-5 dark:opacity-10"></div>
       <div className="absolute top-0 left-1/4 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }}></div>
       <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '3s', animationDuration: '8s' }}></div>
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-lg">
+      <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-lg relative z-10">
         <div className="text-center">
           <h1 className="text-3xl font-bold">Create an Account</h1>
           <p className="text-gray-400 mt-2">Join us and start chatting!</p>

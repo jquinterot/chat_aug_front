@@ -20,7 +20,7 @@ export interface RegisterData {
  * Represents the data required for user login.
  */
 export interface LoginData {
-  email: string;
+  login: string;
   password: string;
 }
 

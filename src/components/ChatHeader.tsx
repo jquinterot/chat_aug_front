@@ -8,7 +8,7 @@ interface ChatHeaderProps {
 export default function ChatHeader({ title, subtitle }: ChatHeaderProps) {
   const { user, logout } = useAuth();
   return (
-    <header className="bg-gradient-to-r from-blue-900 via-purple-900 to-indigo-900 dark:from-blue-950 dark:via-purple-950 dark:to-indigo-950 backdrop-blur-md border-b border-blue-500/20 px-4 py-4 sticky top-0 z-10 shadow-lg shadow-blue-500/10">
+    <header className="bg-gradient-to-r from-blue-950 via-purple-950 to-indigo-950 backdrop-blur-md border-b border-blue-500/20 px-4 py-4 sticky top-0 z-10 shadow-lg shadow-blue-500/10">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-3 justify-between">
           <div className="flex items-center gap-3">
@@ -29,7 +29,7 @@ export default function ChatHeader({ title, subtitle }: ChatHeaderProps) {
           {user && (
             <button
               onClick={logout}
-              className="ml-auto flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold shadow hover:from-blue-700 hover:to-purple-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+              className="ml-auto flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-700 hover:bg-purple-700 text-white font-semibold shadow transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
               title="Logout"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

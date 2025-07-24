@@ -8,7 +8,7 @@ import Button from '@/components/ui/Button';
 import { useAuth } from '@/context/AuthContext';
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [loginValue, setLoginValue] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const { login, isLoading } = useAuth();
@@ -18,7 +18,7 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setError(null);
     try {
-      await login({ email, password });
+      await login({ login: loginValue, password });
       router.push('/'); // Redirect to chat page on success
     } catch (err) {
       if (err instanceof Error) {
@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
       <div className="absolute inset-0 bg-grid-pattern opacity-5 dark:opacity-10"></div>
       <div className="absolute top-0 left-1/4 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }}></div>
       <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '3s', animationDuration: '8s' }}></div>
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-lg">
+      <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-lg relative z-10">
         <div className="text-center">
           <h1 className="text-3xl font-bold">Welcome Back</h1>
           <p className="text-gray-400 mt-2">Sign in to continue to your chat.</p>
@@ -43,12 +43,12 @@ const LoginPage: React.FC = () => {
         {error && <p className="text-center text-red-500 bg-red-900/20 p-3 rounded-md">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input
-            id="email"
-            label="Email Address"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
+            id="login"
+            label="Username or Email"
+            type="text"
+            value={loginValue}
+            onChange={(e) => setLoginValue(e.target.value)}
+            placeholder="yourname or you@example.com"
             required
           />
           <Input
