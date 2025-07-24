@@ -1,13 +1,7 @@
 import { useRef, useEffect } from "react";
+import { Message } from "@/types";
 import MessageBubble from "./MessageBubble";
 import LoadingIndicator from "./LoadingIndicator";
-
-interface Message {
-  id: string;
-  content: string;
-  role: "user" | "assistant";
-  timestamp: Date;
-}
 
 interface MessageListProps {
   messages: Message[];
@@ -26,7 +20,7 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-6">
+    <div key={messages[0]?.id} className="flex flex-col gap-2 overflow-y-auto px-4 py-6">
       <div className="max-w-4xl mx-auto space-y-6">
         {messages.map((message) => (
           <MessageBubble key={message.id} message={message} />

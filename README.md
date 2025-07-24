@@ -1,5 +1,78 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## User API Documentation
+
+The application uses a RESTful API for user management.
+
+### `POST /register`
+
+Create a new user.
+
+**Request Body:**
+```json
+{
+  "username": "newuser",
+  "email": "newuser@example.com",
+  "password": "a-strong-password"
+}
+```
+
+**Success Response (201 Created):**
+```json
+{
+  "id": 1,
+  "username": "newuser",
+  "email": "newuser@example.com"
+}
+```
+
+---
+
+### `GET /users`
+
+List all users.
+
+**Success Response (200 OK):**
+```json
+[
+  {
+    "id": 1,
+    "username": "newuser",
+    "email": "newuser@example.com"
+  },
+  {
+    "id": 2,
+    "username": "anotheruser",
+    "email": "anotheruser@example.com"
+  }
+]
+```
+
+---
+
+### `GET /users/{user_id}`
+
+Get a single user by their ID.
+
+**Success Response (200 OK):**
+```json
+{
+  "id": 1,
+  "username": "newuser",
+  "email": "newuser@example.com"
+}
+```
+
+---
+
+### `DELETE /users/{user_id}`
+
+Delete a user by their ID.
+
+**Success Response (204 No Content):**
+
+An empty response with a 204 status code indicates the user was successfully deleted.
+
 ## Getting Started
 
 First, run the development server:

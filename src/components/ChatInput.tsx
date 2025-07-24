@@ -1,19 +1,19 @@
 import { useRef } from "react";
 
 interface ChatInputProps {
-  input: string;
-  isLoading: boolean;
-  onInputChange: (value: string) => void;
+  value: string;
+  onInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
+  isLoading: boolean;
 }
 
 export default function ChatInput({
-  input,
-  isLoading,
+  value,
   onInputChange,
   onSubmit,
   onKeyDown,
+  isLoading,
 }: ChatInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -23,10 +23,10 @@ export default function ChatInput({
         <div className="flex items-end gap-3 group">
           <textarea
             ref={textareaRef}
-            value={input}
-            onChange={(e) => onInputChange(e.target.value)}
+            value={value}
+            onChange={onInputChange}
             onKeyDown={onKeyDown}
-            placeholder="Type your message here..."
+            placeholder={value ? "" : "Type your message here..."}
             className="flex-1 resize-none rounded-2xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-lg"
             rows={1}
             style={{
@@ -38,9 +38,9 @@ export default function ChatInput({
           />
           <button
             type="submit"
-            disabled={!input.trim() || isLoading}
+            disabled={isLoading || !value.trim()}
             className={`w-[52px] h-[52px] rounded-2xl text-white transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 flex items-center justify-center flex-shrink-0 ${
-              !input.trim() || isLoading
+              !value.trim() || isLoading
                 ? "bg-gray-300 dark:bg-gray-600 cursor-not-allowed"
                 : "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 active:scale-95 hover:scale-105"
             }`}

@@ -1,8 +1,9 @@
 export interface Message {
-  id: string;
-  content: string;
+  id: string | number;
   role: 'user' | 'assistant';
+  content: string;
   timestamp: Date;
+  user?: string;
 }
 
 export interface ChatResponse {
@@ -16,7 +17,7 @@ export interface UseChatReturn {
   messages: Message[];
   isLoading: boolean;
   error: string | null;
-  sendMessage: (message: string) => Promise<void>;
+  sendMessage: (message: string, user: string) => Promise<void>;
   clearMessages: () => void;
 }
 

@@ -8,8 +8,8 @@ export function useChat(initialMessages: Message[] = []): UseChatReturn {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const sendMessage = useCallback(async (messageContent: string) => {
-    if (!messageContent.trim()) return;
+  const sendMessage = useCallback(async (message: string, user: string): Promise<void> => {
+    if (!message.trim()) return;
 
     // Clear any previous errors
     setError(null);
@@ -17,7 +17,8 @@ export function useChat(initialMessages: Message[] = []): UseChatReturn {
     // Add user message immediately
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: messageContent.trim(),
+      content: message.trim(),
+      user,
       role: 'user',
       timestamp: new Date(),
     };
@@ -32,8 +33,8 @@ export function useChat(initialMessages: Message[] = []): UseChatReturn {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user: 'test', // Using 'test' as default user as requested
-          message: messageContent.trim(),
+          message: message.trim(),
+          user,
         }),
       });
 

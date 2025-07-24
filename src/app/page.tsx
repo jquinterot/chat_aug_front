@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
 import ChatHeader from "../components/ChatHeader";
 import MessageList from "../components/MessageList";
 import ChatInput from "../components/ChatInput";
@@ -23,18 +25,28 @@ export default function ChatBot() {
       timestamp: new Date(),
     },
   ];
-  
-  const { messages, isLoading, error, sendMessage } = useChat(initialMessages);
+
+  const { messages, isLoading: isChatLoading, error, sendMessage } = useChat(initialMessages);
+  const { user, isLoading: isAuthLoading } = useAuth();
+  const router = useRouter();
   const [input, setInput] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isChatLoading) return;
 
     // Send message using the custom hook
-    await sendMessage(input);
+    await sendMessage(input, user?.username || 'user');
+
+    // Clear the input field after sending
     setInput("");
   };
+
+  useEffect(() => {
+    if (!isAuthLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, isAuthLoading, router]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -42,6 +54,15 @@ export default function ChatBot() {
       handleSubmit(e as React.FormEvent);
     }
   };
+
+  if (isAuthLoading || !user) {
+    // You can render a loading spinner or a blank page while checking auth
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center text-white">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 dark:from-gray-900 dark:via-blue-900/10 dark:to-purple-900/10 relative overflow-hidden">
@@ -58,19 +79,21 @@ export default function ChatBot() {
         />
         
         <ErrorDisplay error={error} />
-        
-        <MessageList 
-          messages={messages} 
-          isLoading={isLoading} 
-        />
-        
-        <ChatInput
-          input={input}
-          isLoading={isLoading}
-          onInputChange={setInput}
-          onSubmit={handleSubmit}
-          onKeyDown={handleKeyDown}
-        />
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          <MessageList 
+            messages={messages} 
+            isLoading={isChatLoading} 
+          />
+        </div>
+        <div className="shrink-0">
+          <ChatInput
+            value={input}
+            isLoading={isChatLoading}
+            onInputChange={(e) => setInput(e.target.value)}
+            onSubmit={handleSubmit}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
       </div>
     </div>
   );
