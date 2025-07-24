@@ -40,7 +40,6 @@ export default function ChatHeader({ title, subtitle }: ChatHeaderProps) {
           )}
         </div>
         
-        {/* Subtle gradient border */}
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-400/30 to-transparent"></div>
       </div>
     </header>
