@@ -45,6 +45,11 @@ jobs:
           output_location: ".next/static" # Built app content directory for Next.js
           github_id_token: ${{ steps.idtoken.outputs.result }}
           app_build_command: "npm run build" # Explicitly set the build command
+          skip_app_build: false
+          skip_api_build: true
+          verbose: true
+          max_wait_for_build_mins: 20
+          build_cache: true
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
