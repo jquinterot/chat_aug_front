@@ -3,38 +3,19 @@ const nextConfig = {
   // Enable static exports for Azure Static Web Apps
   output: 'export',
   
-  // Optional: Add a trailing slash to all paths
+  // Add a trailing slash to all paths for better compatibility
   trailingSlash: true,
   
-  // Optional: Change the output directory to 'out' for compatibility
+  // Change the output directory to 'out' for compatibility
   distDir: 'out',
   
-  // Disable image optimization if not using next/image
+  // Disable image optimization for static export
   images: {
     unoptimized: true,
   },
   
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
-          },
-        ],
-      },
-    ];
-  },
+  // Disable React StrictMode for static export
+  reactStrictMode: false,
 };
 
 module.exports = nextConfig;
