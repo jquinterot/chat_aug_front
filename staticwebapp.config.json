@@ -1,18 +1,21 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/images/*", "/*.css", "/*.js", "/*.json"]
-  },
-  "mimeTypes": {
-    ".json": "text/json"
+    "exclude": ["/static/*", "/images/*", "/*.{css,js,ico,png,jpg,gif,svg,json}"]
   },
   "routes": [
     {
-      "route": "/*",
-      "serve": "/index.html",
-      "statusCode": 200
+      "route": "/api/*",
+      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"],
+      "rewrite": "/api/*"
     }
   ],
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/404.html",
+      "statusCode": 404
+    }
+  },
   "platform": {
     "apiRuntime": "node:18"
   }
