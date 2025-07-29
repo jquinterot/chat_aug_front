@@ -42,7 +42,7 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/" # App source code path
           api_location: "" # Api source code path - optional
-          output_location: ".next/static" # Built app content directory for Next.js
+          output_location: ".next" # Changed to include the full .next directory
           github_id_token: ${{ steps.idtoken.outputs.result }}
           app_build_command: "npm run build" # Explicitly set the build command
           skip_app_build: false
@@ -50,6 +50,12 @@ jobs:
           verbose: true
           max_wait_for_build_mins: 20
           build_cache: true
+          # Add these settings for Next.js
+          app_artifact_location: ".next/static"
+          is_static_export: false
+          # Add environment variables if needed
+          # env: |
+          #   NODE_ENV=production
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
