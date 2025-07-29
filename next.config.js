@@ -1,21 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable static exports for Azure Static Web Apps
-  output: 'export',
+  // Enable static exports for Azure Static Web Apps when not in standalone mode
+  output: process.env.NEXT_STANDALONE ? undefined : 'export',
   
   // Add a trailing slash to all paths for better compatibility
   trailingSlash: true,
   
-  // Change the output directory to 'out' for compatibility
-  distDir: 'out',
+  // Change the output directory based on build type
+  distDir: process.env.NEXT_STANDALONE ? '.next' : 'out',
   
   // Disable image optimization for static export
   images: {
-    unoptimized: true,
+    unoptimized: process.env.NEXT_STANDALONE ? false : true,
   },
   
-  // Disable React StrictMode for static export
-  reactStrictMode: false,
+  // Enable React StrictMode for development
+  reactStrictMode: process.env.NODE_ENV === 'development',
+  
+  // Enable standalone output for Docker
+  output: process.env.NEXT_STANDALONE ? 'standalone' : 'export',
 };
 
 module.exports = nextConfig;
