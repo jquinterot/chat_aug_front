@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import type { Message, ChatResponse, UseChatReturn } from '../types';
 
-const API_BASE_URL = 'http://localhost:8000'; // Adjust this to your backend URL
+const API_BASE_URL = process.env.PROD_API_URL || 'http://localhost:8000'; // Use environment variable or fallback to localhost
 
 export function useChat(initialMessages: Message[] = []): UseChatReturn {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
