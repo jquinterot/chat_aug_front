@@ -1,7 +1,7 @@
 // test-utils.tsx
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
-import { NextIntlProvider } from 'next-intl';
+import { IntlProvider } from 'next-intl';
 
 type AllTheProvidersProps = {
   children: React.ReactNode;
@@ -9,9 +9,9 @@ type AllTheProvidersProps = {
 
 const AllTheProviders = ({ children }: AllTheProvidersProps) => {
   return (
-    <NextIntlProvider locale="en" messages={{}}>
+    <IntlProvider locale="en" messages={{}}>
       {children}
-    </NextIntlProvider>
+    </IntlProvider>
   );
 };
 
