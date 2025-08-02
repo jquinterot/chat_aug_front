@@ -2,7 +2,7 @@
 const nextConfig = {
   // Environment variables to expose to the client side
   env: {
-    PROD_API_URL: process.env.PROD_API_URL,
+    NEXT_PUBLIC_PROD_API_URL: process.env.PROD_API_URL,
   },
   // Enable static exports for Azure Static Web Apps when not in standalone mode
   output: process.env.NEXT_STANDALONE ? undefined : 'export',

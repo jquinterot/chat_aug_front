@@ -5,7 +5,8 @@ import type { User, LoginData, RegisterData, AuthContextType } from '@/types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_BASE_URL = 'http://localhost:8000'; // Adjust if your auth API is elsewhere
+// Use environment variable with NEXT_PUBLIC_ prefix for client-side access
+const API_BASE_URL = process.env.NEXT_PUBLIC_PROD_API_URL || 'http://localhost:8000';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);

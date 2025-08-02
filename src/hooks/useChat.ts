@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
 import type { Message, ChatResponse, UseChatReturn } from '../types';
 
-const API_BASE_URL = process.env.PROD_API_URL || 'http://localhost:8000'; // Use environment variable or fallback to localhost
+// Use environment variable with NEXT_PUBLIC_ prefix for client-side access
+const API_BASE_URL = process.env.NEXT_PUBLIC_PROD_API_URL || 'http://localhost:8000';
 
 export function useChat(initialMessages: Message[] = []): UseChatReturn {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
