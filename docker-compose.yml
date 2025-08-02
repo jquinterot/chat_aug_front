@@ -7,19 +7,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
-    env_file:
-      - .env
     environment:
       - NODE_ENV=production
       - PORT=80
-      - NEXT_PUBLIC_PROD_API_URL=${NEXT_PUBLIC_PROD_API_URL}
+      - NEXT_PUBLIC_PROD_API_URL=https://chataugbackcontinerized-b0bbemakhucrhzdh.canadacentral-01.azurewebsites.net
     restart: unless-stopped
+    # Healthcheck is not needed in production as Azure App Service has its own health probes
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      disable: true
 
   # Optional: Add your backend service here if needed
   # backend:
