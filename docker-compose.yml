@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_PROD_API_URL=https://chataugbackcontinerized-b0bbemakhucrhzdh.canadacentral-01.azurewebsites.net
     ports:
       - "80:80"
     environment:

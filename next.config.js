@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Environment variables to expose to the client side
-  env: {
-    NEXT_PUBLIC_PROD_API_URL: process.env.NEXT_PUBLIC_PROD_API_URL,
-  },
+  // Environment variables are automatically exposed to the browser if they start with NEXT_PUBLIC_
+  // No need to manually specify them here
   
   // Enable React StrictMode for development
   reactStrictMode: process.env.NODE_ENV === 'development',
