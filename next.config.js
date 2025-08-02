@@ -2,7 +2,7 @@
 const nextConfig = {
   // Environment variables to expose to the client side
   env: {
-    NEXT_PUBLIC_PROD_API_URL: process.env.PROD_API_URL,
+    NEXT_PUBLIC_PROD_API_URL: process.env.NEXT_PUBLIC_PROD_API_URL,
   },
   
   // Enable React StrictMode for development
