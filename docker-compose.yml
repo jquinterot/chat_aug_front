@@ -7,9 +7,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
       - PORT=80
+      - NEXT_PUBLIC_PROD_API_URL=${NEXT_PUBLIC_PROD_API_URL}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
