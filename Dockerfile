@@ -32,7 +32,7 @@ COPY --from=base --chown=nextjs:nodejs /app/.next/static ./.next/static
 # COPY --from=base /app/out ./out
 
 USER nextjs
-EXPOSE 3000
+EXPOSE 80
 
 # Command for standalone server
 CMD ["node", "server.js"]

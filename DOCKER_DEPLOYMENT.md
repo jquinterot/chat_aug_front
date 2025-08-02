@@ -20,15 +20,15 @@ This guide covers how to dockerize and deploy your Next.js chatbot application t
 docker build -t chatbot-app .
 
 # Run the container
-docker run -p 3000:3000 chatbot-app
+docker run -p 80:80 chatbot-app
 
 # Or use Docker Compose
 docker-compose up --build
 ```
 
 ### Test the Application
-- App: http://localhost:3000
-- Health Check: http://localhost:3000/api/health
+- App: http://localhost
+- Health Check: http://localhost/api/health
 
 ## ☁️ Azure Deployment Options
 
@@ -46,7 +46,7 @@ az container create \
   --image your-registry.azurecr.io/chatbot-app:latest \
   --cpu 1 \
   --memory 2 \
-  --ports 3000 \
+  --ports 80 \
   --dns-name-label chatbot-app-unique \
   --environment-variables NODE_ENV=production PORT=3000
 ```
@@ -182,10 +182,10 @@ jobs:
 ## 🛠️ Troubleshooting
 
 ### Common Issues
-1. **Port binding**: Ensure PORT=3000 environment variable
+1. **Port binding**: Ensure PORT=80 environment variable
 2. **Health checks**: Verify `/api/health` endpoint responds
 3. **Memory limits**: Increase if build fails (minimum 2GB recommended)
-4. **Network**: Check Azure NSG rules for port 3000
+4. **Network**: Check Azure NSG rules for port 80
 
 ### Debugging
 ```bash
