@@ -28,14 +28,14 @@ export function useChat(initialMessages: Message[] = []): UseChatReturn {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/chat/`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/chat/message`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          user: user,
           message: message.trim(),
-          user,
         }),
       });
 
