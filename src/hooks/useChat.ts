@@ -4,6 +4,11 @@ import type { Message, ChatResponse, UseChatReturn } from '../types';
 // Use environment variable with fallback to production URL
 const API_BASE_URL = process.env.NEXT_PUBLIC_PROD_API_URL || 'https://chataugbackcontinerized-b0bbemakhucrhzdh.canadacentral-01.azurewebsites.net';
 
+// Log the API base URL being used (only in development)
+if (process.env.NODE_ENV !== 'production') {
+  console.log('Using API Base URL:', API_BASE_URL);
+}
+
 export function useChat(initialMessages: Message[] = []): UseChatReturn {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);

@@ -15,8 +15,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_STANDALONE=true
 
 # Build the app for standalone mode with production environment variables
+# Using build-args to allow overriding the API URL during build
 ARG NEXT_PUBLIC_PROD_API_URL
-ENV NEXT_PUBLIC_PROD_API_URL=$NEXT_PUBLIC_PROD_API_URL
+ENV NEXT_PUBLIC_PROD_API_URL=${NEXT_PUBLIC_PROD_API_URL:-https://chataugbackcontinerized-b0bbemakhucrhzdh.canadacentral-01.azurewebsites.net}
 
 RUN npm run build
 

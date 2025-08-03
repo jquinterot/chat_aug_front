@@ -12,6 +12,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=80
+      # This should match the build arg to ensure consistency
       - NEXT_PUBLIC_PROD_API_URL=https://chataugbackcontinerized-b0bbemakhucrhzdh.canadacentral-01.azurewebsites.net
     restart: unless-stopped
     # Healthcheck is not needed in production as Azure App Service has its own health probes

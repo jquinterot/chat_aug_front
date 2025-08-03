@@ -63,8 +63,11 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+          build-args: |
+            NEXT_PUBLIC_PROD_API_URL=${{ vars.NEXT_PUBLIC_PROD_API_URL || 'https://chataugbackcontinerized-b0bbemakhucrhzdh.canadacentral-01.azurewebsites.net' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          cache-hint: type=gha
 
       - name: Logout from Docker Hub
         if: always()
