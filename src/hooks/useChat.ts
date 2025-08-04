@@ -17,6 +17,13 @@ export function useChat(initialMessages: Message[] = []): UseChatReturn {
   const sendMessage = useCallback(async (message: string, user: string): Promise<void> => {
     if (!message.trim()) return;
 
+    // Get token from localStorage
+    const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+    if (!token) {
+      setError('No authentication token found');
+      return;
+    }
+
     // Clear any previous errors
     setError(null);
 
@@ -37,6 +44,7 @@ export function useChat(initialMessages: Message[] = []): UseChatReturn {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           user: user,
