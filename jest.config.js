@@ -7,6 +7,11 @@ const createJestConfig = nextJest({
 
 // Add any custom config to be passed to Jest
 const customJestConfig = {
+  // Only look for test files in __tests__ directories and files ending with .test.ts(x) or .spec.ts(x)
+  testMatch: [
+    '**/__tests__/**/*.[jt]s?(x)',
+    '**/?(*.)+(spec|test).[tj]s?(x)'
+  ],
   // Add more setup options before each test is run
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
@@ -20,10 +25,14 @@ const customJestConfig = {
     // Handle image imports
     '^\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.js',
   },
-  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/.next/',
+    '/babel\\.config\\.(js|ts)$'
+  ],
   transform: {
     // Use babel-jest to transpile tests with our test babel config
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './babel.config.test.js' }],
+    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './babel.config.test.cjs' }],
   },
   transformIgnorePatterns: [
     '/node_modules/(?!(@babel/runtime|@babel/plugin-transform-runtime))',

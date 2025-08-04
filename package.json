@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "BABEL_CONFIG_FILE=babel.config.test.js jest",
+    "test": "BABEL_CONFIG_FILE=babel.config.test.cjs jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
