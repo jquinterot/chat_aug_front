@@ -1,0 +1,3 @@
+// Main Babel config - empty by default to let Next.js use SWC
+// For tests, we use babel.config.test.js
+module.exports = {};

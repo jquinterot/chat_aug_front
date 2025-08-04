@@ -13,23 +13,26 @@ const customJestConfig = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
-    // Handle module aliases (this will be automatically configured for you soon)
+    // Handle module aliases
     '^@/(.*)$': '<rootDir>/src/$1',
     // Handle CSS imports (without CSS modules)
-    '^.+\.(css|sass|scss)$': 'identity-obj-proxy',
+    '^\\.(css|sass|scss)$': 'identity-obj-proxy',
     // Handle image imports
-    '^.+\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.js',
+    '^\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.js',
   },
   testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
   transform: {
-    // Use babel-jest to transpile tests with the next/babel preset
-    // https://jestjs.io/docs/configuration#transform-objectstring-pathtotransformer--pathtotransformer-object
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
+    // Use babel-jest to transpile tests with our test babel config
+    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './babel.config.test.js' }],
   },
   transformIgnorePatterns: [
-    '/node_modules/',
+    '/node_modules/(?!(@babel/runtime|@babel/plugin-transform-runtime))',
     '^.+\\.module\\.(css|sass|scss)$',
   ],
+  // Ensure we're using the correct module system for Node.js
+  testEnvironmentOptions: {
+    customExportConditions: ['node', 'node-addons'],
+  },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

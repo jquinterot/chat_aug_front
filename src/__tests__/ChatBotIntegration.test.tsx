@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ChatBot from '../app/page';
-import { useRouter } from 'next/navigation';
 
 // Mock child components with simple implementations
 jest.mock('../components/ChatHeader', () => ({

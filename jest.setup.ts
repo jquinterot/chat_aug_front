@@ -2,24 +2,40 @@
 import '@testing-library/jest-dom';
 
 // Mock localStorage
-const localStorageMock = (() => {
-  let store: Record<string, string> = {};
-  return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
-      store[key] = value.toString();
-    },
-    removeItem: (key: string) => {
-      delete store[key];
-    },
-    clear: () => {
-      store = {};
-    },
-  };
-})();
+class LocalStorageMock implements Storage {
+  private store: Record<string, string> = {};
+  public length = 0;
+  
+  key(index: number): string | null {
+    return Object.keys(this.store)[index] || null;
+  }
+  
+  getItem(key: string): string | null {
+    return this.store[key] || null;
+  }
+  
+  setItem(key: string, value: string): void {
+    if (!this.store[key]) {
+      this.length++;
+    }
+    this.store[key] = value.toString();
+  }
+  
+  removeItem(key: string): void {
+    if (this.store[key]) {
+      this.length--;
+    }
+    delete this.store[key];
+  }
+  
+  clear(): void {
+    this.store = {};
+    this.length = 0;
+  }
+}
 
 // Set up localStorage mock
-global.localStorage = localStorageMock;
+global.localStorage = new LocalStorageMock();
 
 // Set a default auth token for tests
 localStorage.setItem('authToken', 'test-token');
