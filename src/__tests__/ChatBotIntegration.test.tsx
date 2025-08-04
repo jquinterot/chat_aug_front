@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ChatBot from '../app/page';
+import { useRouter } from 'next/navigation';
 
 // Mock child components with simple implementations
 jest.mock('../components/ChatHeader', () => ({
@@ -62,6 +63,23 @@ jest.mock('../hooks/useChat', () => ({
     isLoading: false,
     error: null,
     sendMessage: jest.fn(),
+  }),
+}));
+
+// Mock next/navigation
+const mockPush = jest.fn();
+const mockReplace = jest.fn();
+const mockPrefetch = jest.fn();
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    replace: mockReplace,
+    prefetch: mockPrefetch,
+  }),
+  usePathname: () => '/',
+  useSearchParams: () => ({
+    get: jest.fn(),
   }),
 }));
 
