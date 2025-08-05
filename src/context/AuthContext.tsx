@@ -11,6 +11,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_PROD_API_URL || 'https://chataugbac
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const isAuthenticated = !!user?.token;
 
   useEffect(() => {
     // Check for a logged-in user in local storage on initial load
@@ -38,7 +39,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error(errorData.detail || 'Login failed');
     }
 
-    const loggedInUser: User = await response.json();
+    const responseData = await response.json();
+    
+    // Ensure the token is included in the user object
+    const loggedInUser: User = {
+      id: responseData.user?.id || responseData.id,
+      username: responseData.user?.username || responseData.username,
+      email: responseData.user?.email || responseData.email,
+      token: responseData.token || responseData.access_token
+    };
+    
+    if (!loggedInUser.token) {
+      throw new Error('No token received from server');
+    }
+    
     setUser(loggedInUser);
     localStorage.setItem('user', JSON.stringify(loggedInUser));
   };
@@ -68,7 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { Message, ChatResponse, UseChatReturn } from '../types';
+import { useAuth } from '../context/AuthContext';
 
 // Use environment variable with fallback to production URL
 const API_BASE_URL = process.env.NEXT_PUBLIC_PROD_API_URL || 'https://chataugbackcontinerized-b0bbemakhucrhzdh.canadacentral-01.azurewebsites.net';
@@ -13,16 +14,27 @@ export function useChat(initialMessages: Message[] = []): UseChatReturn {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { user, isAuthenticated } = useAuth();
 
-  const sendMessage = useCallback(async (message: string, user: string): Promise<void> => {
+  const sendMessage = useCallback(async (message: string): Promise<void> => {
     if (!message.trim()) return;
 
-    // Get token from localStorage
-    const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
-    if (!token) {
-      setError('No authentication token found');
+    console.log('Auth User:', user); // Debug log
+    
+    if (!isAuthenticated || !user) {
+      console.error('User not authenticated');
+      setError('Please log in to send messages');
       return;
     }
+    
+    if (!user.token) {
+      console.error('No authentication token found');
+      setError('Authentication token missing');
+      return;
+    }
+    
+    const username = user.username || user.email || 'user';
+    console.log('Using username:', username);
 
     // Clear any previous errors
     setError(null);
@@ -31,7 +43,7 @@ export function useChat(initialMessages: Message[] = []): UseChatReturn {
     const userMessage: Message = {
       id: Date.now().toString(),
       content: message.trim(),
-      user,
+      user: username,
       role: 'user',
       timestamp: new Date(),
     };
@@ -40,15 +52,22 @@ export function useChat(initialMessages: Message[] = []): UseChatReturn {
     setIsLoading(true);
 
     try {
+      const requestBody = {
+        user: username,
+        message: message.trim()
+      };
+      
+      console.log('Sending request to chat API with body:', JSON.stringify(requestBody, null, 2));
+      
       const response = await fetch(`${API_BASE_URL}/api/v1/chat/message`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${user.token}`
         },
         body: JSON.stringify({
-          user: user,
-          message: message.trim(),
+          user: user.username || user.email || 'user',
+          message: message.trim()
         }),
       });
 
@@ -90,15 +109,22 @@ export function useChat(initialMessages: Message[] = []): UseChatReturn {
   }, []);
 
   const clearMessages = useCallback(() => {
-    setMessages([]);
-    setError(null);
-  }, []);
+    setMessages(initialMessages);
+  }, [initialMessages]);
+
+  const handleSendMessage = useCallback(async (message: string) => {
+    if (!isAuthenticated || !user) {
+      setError('User not authenticated');
+      return Promise.reject('User not authenticated');
+    }
+    return sendMessage(message);
+  }, [isAuthenticated, user, sendMessage]);
 
   return {
     messages,
     isLoading,
     error,
-    sendMessage,
+    sendMessage: handleSendMessage,
     clearMessages,
   };
 }
