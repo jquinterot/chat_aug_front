@@ -106,7 +106,7 @@ export function useChat(initialMessages: Message[] = []): UseChatReturn {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [isAuthenticated, user]);
 
   const clearMessages = useCallback(() => {
     setMessages(initialMessages);

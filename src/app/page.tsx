@@ -21,7 +21,7 @@ function ChatBot() {
     {
       id: "1",
       content: "Hello! I'm your ISTQB AI assistant. How can I help you today?",
-      xrole: "assistant",
+      role: "assistant",
       timestamp: new Date(),
     },
   ];
