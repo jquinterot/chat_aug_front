@@ -1,12 +1,17 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ChatBot from '../app/page';
 
 // Mock child components with simple implementations
 jest.mock('../components/ChatHeader', () => ({
   __esModule: true,
-  default: () => <div data-testid="chat-header">Chat Header</div>,
+  default: ({ title, subtitle }: { title: string; subtitle: string }) => (
+    <div data-testid="chat-header">
+      <h1>{title}</h1>
+      <p>{subtitle}</p>
+    </div>
+  ),
 }));
 
 jest.mock('../components/MessageList', () => ({
@@ -24,28 +29,45 @@ jest.mock('../components/MessageList', () => ({
 
 jest.mock('../components/ChatInput', () => ({
   __esModule: true,
-  default: ({ onSend }: { onSend: (message: string) => void }) => (
-    <div>
-      <input
+  default: ({ onInputChange, onKeyDown, onSubmit, value, isLoading }: {
+    onInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onKeyDown: (e: React.KeyboardEvent) => void;
+    onSubmit: (e: React.FormEvent) => void;
+    value: string;
+    isLoading: boolean;
+  }) => (
+    <form onSubmit={onSubmit}>
+      <textarea
         data-testid="message-input"
-        type="text"
+        value={value}
+        onChange={onInputChange}
+        onKeyDown={onKeyDown}
         placeholder="Type your message..."
       />
       <button 
         data-testid="send-button" 
-        onClick={() => onSend('Test message')}
+        type="submit"
+        disabled={isLoading}
       >
-        Send
+        {isLoading ? 'Sending...' : 'Send'}
       </button>
-    </div>
+    </form>
   ),
 }));
 
 // Mock the hooks
+const mockUser = {
+  id: 'user123', 
+  username: 'testuser',
+  email: 'test@example.com'
+};
+
+const mockLogout = jest.fn();
+
 jest.mock('../context/AuthContext', () => ({
   useAuth: () => ({
-    user: { id: 'user123', name: 'Test User' },
-    isLoading: false,
+    user: mockUser,
+    logout: mockLogout,
   }),
 }));
 
@@ -54,7 +76,7 @@ jest.mock('../hooks/useChat', () => ({
     messages: [
       {
         id: '1',
-        content: 'Hello! How can I help you today?',
+        content: "Hello! I'm your ISTQB AI assistant. How can I help you today?",
         role: 'assistant',
         timestamp: new Date(),
       },
@@ -68,13 +90,11 @@ jest.mock('../hooks/useChat', () => ({
 // Mock next/navigation
 const mockPush = jest.fn();
 const mockReplace = jest.fn();
-const mockPrefetch = jest.fn();
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: mockPush,
     replace: mockReplace,
-    prefetch: mockPrefetch,
   }),
   usePathname: () => '/',
   useSearchParams: () => ({
@@ -82,15 +102,27 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
+// Mock useCurrentUser
+jest.mock('../hooks/useCurrentUser', () => ({
+  useCurrentUser: () => ({
+    user: mockUser,
+    loading: false,
+  }),
+}));
+
 describe('ChatBot Component', () => {
-  it('renders the chat interface with initial message', () => {
+  it('renders the chat interface with initial message when authenticated', async () => {
     render(<ChatBot />);
     
-    // Check if the chat header is rendered
-    expect(screen.getByTestId('chat-header')).toBeInTheDocument();
+    // Check if the chat header is rendered with correct props
+    const header = screen.getByTestId('chat-header');
+    expect(header).toBeInTheDocument();
     
     // Check if the initial message is displayed
-    expect(screen.getByText('Hello! How can I help you today?')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Hello! I'm your ISTQB AI assistant. How can I help you today?"))
+        .toBeInTheDocument();
+    });
     
     // Check if the input and send button are rendered
     expect(screen.getByTestId('message-input')).toBeInTheDocument();
