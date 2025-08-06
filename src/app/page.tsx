@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import ChatHeader from "@/components/ChatHeader";
 import MessageList from "@/components/MessageList";
 import ChatInput from "@/components/ChatInput";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import { useChat } from "@/hooks/useChat";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 interface Message {
   id: string;
@@ -16,7 +16,11 @@ interface Message {
   timestamp: Date;
 }
 
-function ChatBot() {
+function ChatPage() {
+  const router = useRouter();
+  const { user, loading } = useCurrentUser();
+  const [input, setInput] = useState("");
+  
   const initialMessages: Message[] = [
     {
       id: "1",
@@ -27,8 +31,21 @@ function ChatBot() {
   ];
 
   const { messages, isLoading: isChatLoading, error, sendMessage } = useChat(initialMessages);
-  const { user } = useAuth();
-  const [input, setInput] = useState("");
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,8 +67,7 @@ function ChatBot() {
   };
 
   return (
-    <ProtectedRoute>
-      <div className="flex flex-col h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 dark:from-gray-900 dark:via-blue-900/10 dark:to-purple-900/10 relative overflow-hidden">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 dark:from-gray-900 dark:via-blue-900/10 dark:to-purple-900/10 relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-grid-pattern opacity-5 dark:opacity-10"></div>
         <div className="absolute top-0 left-1/4 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }}></div>
@@ -73,7 +89,7 @@ function ChatBot() {
           <div className="border-t border-gray-200 dark:border-gray-700 p-4">
             <ChatInput
               value={input}
-              onInputChange={(e) => setInput(e.target.value)}
+              onInputChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               onSubmit={handleSubmit}
               isLoading={isChatLoading}
@@ -82,8 +98,7 @@ function ChatBot() {
           </div>
         </div>
       </div>
-    </ProtectedRoute>
   );
 }
 
-export default ChatBot;
+export default ChatPage;
