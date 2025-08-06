@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import ChatBot from '../app/page';
 
-// Mock the page component with a simple implementation
 jest.mock('../app/page', () => {
   return function MockChatBot() {
     return (
@@ -24,8 +24,6 @@ jest.mock('../app/page', () => {
   };
 });
 
-// Import the component after setting up the mock
-import ChatBot from '../app/page';
 
 describe('ChatBot', () => {
   it('renders the chat interface', () => {
