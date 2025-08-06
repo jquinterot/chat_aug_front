@@ -17,14 +17,51 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    
+    // Basic validation
+    if (!loginValue.trim() || !password) {
+      setError('Please enter both username/email and password');
+      return;
+    }
+    
     try {
-      await login({ login: loginValue, password });
-      router.push('/'); // Redirect to chat page on success
+      const user = await login({ 
+        login: loginValue.trim(), 
+        password: password.trim() 
+      });
+      
+      console.log('Login successful, user:', {
+        id: user.id,
+        username: user.username,
+        hasToken: !!user.token
+      });
+      
+      // Clear sensitive data
+      setPassword('');
+      
+      // Redirect to home page or return URL
+      const returnUrl = new URLSearchParams(window.location.search).get('returnUrl');
+      router.push(returnUrl || '/');
+      
     } catch (err) {
+      console.error('Login error:', err);
+      
+      // Clear password field on error
+      setPassword('');
+      
+      // Set user-friendly error message
       if (err instanceof Error) {
-        setError(err.message);
+        // Handle specific error messages
+        const message = err.message.toLowerCase();
+        if (message.includes('network') || message.includes('fetch')) {
+          setError('Unable to connect to the server. Please check your connection.');
+        } else if (message.includes('credentials')) {
+          setError('Invalid username/email or password. Please try again.');
+        } else {
+          setError(err.message || 'Login failed. Please try again.');
+        }
       } else {
-        setError('An unexpected error occurred.');
+        setError('An unexpected error occurred. Please try again.');
       }
     }
   };
